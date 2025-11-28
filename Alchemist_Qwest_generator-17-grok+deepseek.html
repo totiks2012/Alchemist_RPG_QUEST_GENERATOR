@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 АЛХИМИК ТЕКСТОВЫХ КВЕСТОВ-03</title>
+    <style>
+        /* Стили остаются без изменений, как в предыдущей версии */
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3d3d3d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-primary: #9b59b6;
+            --accent-primary-hover: #8e44ad;
+            --accent-secondary: #3498db;
+            --accent-secondary-hover: #2980b9;
+            --accent-success: #27ae60;
+            --accent-success-hover: #219a52;
+            --accent-warning: #e67e22;
+            --accent-warning-hover: #d35400;
+            --accent-danger: #e74c3c;
+            --accent-danger-hover: #c0392b;
+            --accent-info: #1abc9c;
+            --accent-info-hover: #16a085;
+            --border-color: #404040;
+            --shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #495057;
+            --accent-primary: #9b59b6;
+            --accent-primary-hover: #8e44ad;
+            --accent-secondary: #3498db;
+            --accent-secondary-hover: #2980b9;
+            --accent-success: #27ae60;
+            --accent-success-hover: #219a52;
+            --accent-warning: #e67e22;
+            --accent-warning-hover: #d35400;
+            --accent-danger: #e74c3c;
+            --accent-danger-hover: #c0392b;
+            --accent-info: #1abc9c;
+            --accent-info-hover: #16a085;
+            --border-color: #bdc3c7;
+            --shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Шапка */
+        .header {
+            background: var(--bg-secondary);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Панель инструментов */
+        .toolbar {
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+            justify-content: center;
+        }
+
+        .toolbar-btn {
+            background: var(--accent-secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--accent-secondary-hover);
+            transform: translateY(-2px);
+        }
+
+        .toolbar-btn:active {
+            transform: translateY(0);
+        }
+
+        .toolbar-btn.idea { background: #e67e22; }
+        .toolbar-btn.idea:hover { background: #d35400; }
+        .toolbar-btn.genres { background: var(--accent-primary); }
+        .toolbar-btn.genres:hover { background: var(--accent-primary-hover); }
+        .toolbar-btn.locations { background: var(--accent-success); }
+        .toolbar-btn.locations:hover { background: var(--accent-success-hover); }
+        .toolbar-btn.artifacts { background: var(--accent-warning); }
+        .toolbar-btn.artifacts:hover { background: var(--accent-warning-hover); }
+        .toolbar-btn.mana { background: var(--accent-info); }
+        .toolbar-btn.mana:hover { background: var(--accent-info-hover); }
+        .toolbar-btn.heroes { background: #9b59b6; }
+        .toolbar-btn.heroes:hover { background: #8e44ad; }
+        .toolbar-btn.routes { background: #e74c3c; }
+        .toolbar-btn.routes:hover { background: #c0392b; }
+        .toolbar-btn.economy { background: #f39c12; }
+        .toolbar-btn.economy:hover { background: #e67e22; }
+        .toolbar-btn.summary { background: #8e44ad; }
+        .toolbar-btn.summary:hover { background: #7d3c98; }
+        .toolbar-btn.import { background: #3498db; }
+        .toolbar-btn.import:hover { background: #2980b9; }
+        .toolbar-btn.export { background: #f39c12; }
+        .toolbar-btn.export:hover { background: #e67e22; }
+        .toolbar-btn.reset { background: #e74c3c; }
+        .toolbar-btn.reset:hover { background: #c0392b; }
+        .toolbar-btn.save { background: #27ae60; }
+        .toolbar-btn.save:hover { background: #219a52; }
+
+        .theme-toggle {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .toggle-slider {
+            width: 50px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle input:checked + .toggle-slider::before {
+            transform: translateX(26px);
+        }
+
+        /* Основная область */
+        .main-area {
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        .interview-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .interview-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .interview-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .interview-mode {
+            background: var(--accent-info);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Доски настроек */
+        .board {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .board.active {
+            display: block;
+            padding: 20px;
+            max-height: 600px;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .board-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .board-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .board-action-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .board-action-btn:hover {
+            background: var(--border-color);
+        }
+
+        .board-action-btn.apply {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .board-action-btn.apply:hover {
+            background: var(--accent-success-hover);
+        }
+
+        .board-action-btn.clear {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .board-action-btn.clear:hover {
+            background: var(--accent-danger-hover);
+        }
+
+        .preset-content {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-primary);
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            resize: vertical;
+            width: 100%;
+        }
+
+        .preset-content:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+        }
+
+        .idea-input {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            height: 400px;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .idea-input:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+        }
+
+        .preset-comment {
+            color: #666;
+            font-style: italic;
+        }
+
+        .instruction {
+            background: var(--bg-tertiary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-info);
+        }
+
+        /* Область вывода */
+        .output-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .output-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .output-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .output-action-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .output-action-btn:hover {
+            background: var(--border-color);
+        }
+
+        .output-action-btn.copy {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .output-action-btn.copy:hover {
+            background: var(--accent-success-hover);
+        }
+
+        .output-action-btn.clear {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .output-action-btn.clear:hover {
+            background: var(--accent-danger-hover);
+        }
+
+        .output-action-btn.export {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .output-action-btn.export:hover {
+            background: var(--accent-warning-hover);
+        }
+
+        .output-content {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .status-message.show {
+            transform: translateX(0);
+        }
+
+        .status-message.error {
+            background: var(--accent-danger);
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-btn {
+                justify-content: center;
+            }
+
+            .theme-toggle {
+                margin-left: 0;
+                justify-content: center;
+            }
+
+            .output-actions {
+                flex-direction: column;
+            }
+
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <div class="header">
+            <h1>🎮 АЛХИМИК ТЕКСТОВЫХ КВЕСТОВ</h1>
+            <div class="header-subtitle">Конструктор ТЗ для бесконечных текстовых игр с ИИ-движком</div>
+        </div>
+
+        <!-- Панель инструментов -->
+        <div class="toolbar">
+            <button class="toolbar-btn idea" id="ideaBtn">
+                <span>💡</span>
+                Идея игры
+            </button>
+            <button class="toolbar-btn genres" id="genresBtn">
+                <span>🎭</span>
+                Жанры
+            </button>
+            <button class="toolbar-btn locations" id="locationsBtn">
+                <span>🏰</span>
+                Локации
+            </button>
+            <button class="toolbar-btn routes" id="routesBtn">
+                <span>🛤️</span>
+                Маршруты
+            </button>
+            <button class="toolbar-btn artifacts" id="artifactsBtn">
+                <span>🔮</span>
+                Артефакты
+            </button>
+            <button class="toolbar-btn mana" id="manaBtn">
+                <span>⚡</span>
+                Мана
+            </button>
+            <button class="toolbar-btn heroes" id="heroesBtn">
+                <span>🦸</span>
+                Герой и Враги
+            </button>
+            <button class="toolbar-btn economy" id="economyBtn">
+                <span>💰</span>
+                Экономика
+            </button>
+            <button class="toolbar-btn summary" id="summaryBtn">
+                <span>📋</span>
+                Итог
+            </button>
+            <button class="toolbar-btn import" id="importBtn">
+                <span>📥</span>
+                Импорт
+            </button>
+            <button class="toolbar-btn export" id="exportBtn">
+                <span>📤</span>
+                Экспорт
+            </button>
+            <button class="toolbar-btn reset" id="resetBtn">
+                <span>🔄</span>
+                Сброс
+            </button>
+            <button class="toolbar-btn save" id="saveBtn">
+                <span>💾</span>
+                Сохранить
+            </button>
+
+            <label class="theme-toggle" id="themeToggle">
+                <input type="checkbox" id="themeCheckbox">
+                <span class="toggle-slider"></span>
+                <span>Светлая тема</span>
+            </label>
+        </div>
+
+        <!-- Основная область -->
+        <div class="main-area">
+            <!-- Переключатель режима интервью -->
+            <div class="interview-toggle">
+                <label>
+                    <input type="checkbox" id="interviewModeCheckbox" checked>
+                    <span>✅ Режим интервью с ИИ</span>
+                    <span class="interview-mode">ИНТЕРВЬЮ</span>
+                </label>
+            </div>
+
+            <!-- Доски настроек -->
+            <div class="board active" id="ideaBoard">
+                <div class="board-header">
+                    <div class="board-title">💡 Общая идея игры</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyIdeaBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearIdeaBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Опишите основную концепцию вашей игры:</strong> сюжет, главного героя, основную задачу, ключевые темы и атмосферу.
+                </div>
+                <textarea class="idea-input" id="ideaContent" placeholder="Опишите вашу игровую концепцию... Например:
+
+Молодой маг обнаруживает, что обладает редкой способностью управлять временем. Ему предстоит остановить древнее зло, которое пытается разрушить временной континуум. По пути он встречает союзников и врагов, раскрывает тайны магических артефактов и принимает решения, влияющие на судьбу всего мира.
+
+Ключевые темы: судьба vs свободная воля, цена власти, ответственность за свои действия.
+
+Атмосфера: эпическое фэнтези с элементами тайны и морального выбора."></textarea>
+            </div>
+
+            <div class="board" id="genresBoard">
+                <div class="board-header">
+                    <div class="board-title">🎭 Настройки жанров</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyGenresBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearGenresBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Инструкция:</strong> Удалите символ # в начале строки, чтобы активировать элемент. Активированные строки попадут в итоговое ТЗ.
+                </div>
+                <textarea class="preset-content" id="genresContent">
+# === ОСНОВНЫЕ ЖАНРЫ ===
+# Чтобы активировать жанр - удалите решетку # в начале строки
+# Фэнтези
+# Научная фантастика
+# Киберпанк
+# Хоррор
+# Детектив
+# Романтика
+# Приключения
+# Мистика
+
+# === ГИБРИДЫ ===
+# Активируйте гибриды, удалив решетку #
+# "Фэнтези + Политическая интрига"
+# "Киберпанк + Нуар"
+# "Хоррор + Психологический триллер"
+# "Научная фантастика + Детектив"
+# "Фэнтези + Стимпанк"
+# "Постапокалипсис + Выживание"
+
+# === НАСТРОЙКИ АТМОСФЕРЫ ===
+# Эпический размах
+# Камерная история
+# Мрачная атмосфера
+# Юмористический тон
+# Поэтический стиль
+# Реалистичный подход
+
+# === ВАШИ СОБСТВЕННЫЕ ЖАНРЫ ===
+# Напишите здесь свои уникальные комбинации (уберите # чтобы активировать)
+# "Магический реализм + Городское фэнтези"
+# "Исторический роман + Фантастика"</textarea>
+            </div>
+
+            <div class="board" id="locationsBoard">
+                <div class="board-header">
+                    <div class="board-title">🏰 Настройки локаций и угроз</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyLocationsBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearLocationsBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Инструкция:</strong> Удалите символ # в начале строки, чтобы активировать элемент. Формат локаций: Название [Угроза: X% | Противник | Слабость]
+                </div>
+                <textarea class="preset-content" id="locationsContent">
+# === ТИПЫ ЛОКАЦИЙ ===
+# Формат: Название [Угроза: X% | Противник | Слабость]
+# Удалите решетку # чтобы выбрать локацию
+#Лес [Угроза: 15% | Серый волк | Слабость: Огонь]
+#Город [Угроза: 25% | Уличные бандиты | Слабость: Запугивание]
+#Подземелье [Угроза: 60% | Скелет-воин | Слабость: Святая магия]
+#Замок [Угроза: 40% | Королевская стража | Слабость: Подкуп]
+#Деревня [Угроза: 10% | Деревенский дурак | Слабость: Обман]
+#Горы [Угроза: 50% | Горный тролль | Слабость: Ловкость]
+#Побережье [Угроза: 20% | Пираты | Слабость: Переговоры]
+#Пустыня [Угроза: 35% | Песчаный червь | Слабость: Вода]
+#Болото [Угроза: 45% | Болотный дух | Слабость: Огонь]
+#Руины [Угроза: 55% | Древний голем | Слабость: Магия]
+
+# === ОСОБЫЕ ЛОКАЦИИ ===
+# Активируйте особые локации
+#Магическая башня [Угроза: 70% | Архимаг | Слабость: Контрмагия]
+#Храм древних [Угроза: 80% | Жрец культа | Слабость: Разум]
+#Подземный город [Угроза: 65% | Тёмные эльфы | Слабость: Свет]
+#Летающий остров [Угроза: 75% | Небесные стражи | Слабость: Земля]
+#Порталы между мирами [Угроза: 90% | Демон-хранитель | Слабость: Запечатывание]
+
+# === СВЯЗИ МЕЖДУ ЛОКАЦИЯМИ ===
+# Эти связи будут учтены в генерации игры
+# Лес → Деревня → Город → Замок
+# Подземелье ← Лес
+# Горы → Пещеры → Древний храм
+# Порт → Корабль → Остров
+
+# === АТМОСФЕРА ЛОКАЦИЙ ===
+# Описания атмосферы для активированных локаций
+# Лес: таинственный, опасный, живописный
+# Город: шумный, многолюдный, коррумпированный
+# Замок: величественный, старинный, призрачный
+# Подземелье: темное, сырое, полное ловушек</textarea>
+            </div>
+
+            <div class="board" id="routesBoard">
+                <div class="board-header">
+                    <div class="board-title">🛤️ Цепочки локаций и маршруты</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyRoutesBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearRoutesBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Создайте связанные маршруты и цепочки локаций:</strong> Используйте → для линейных путей, ⇄ для двусторонних, ⤴ для ветвлений
+                </div>
+                <textarea class="preset-content" id="routesContent">
+# === БАЗОВЫЕ МАРШРУТЫ ===
+# Линейные цепочки (удалите # для активации)
+# Порт → Корабль → Остров → Джунгли → Храм Древних
+# Таверна → Тёмный переулок → Подполье → Логово Вора
+# Академия Магии → Запретная Библиотека → Тайный ПортаЛ → Измерение Демонов
+
+# === ВЕТВЛЯЩИЕСЯ ПУТИ ===
+# Маршруты с выбором направления
+# Деревня ⤴ [Лес → Руины] | [Горы → Пещеры] | [Река → Плот → Остров]
+# Перекрёсток ⤴ [Город Тherion] | [Заброшенная Крепость] | [Магическая Башня]
+
+# === ЦИКЛИЧЕСКИЕ МАРШРУТЫ ===
+# Замок ⇄ Тайные ходы ⇄ Катакомбы ⇄ Заброшенный храм
+# Космическая станция ⇄ Транспортный челнок ⇄ Астероидная база
+
+# === ОПАСНЫЕ ЗОНЫ ===
+# Локации с повышенной вероятностью столкновений!
+# Тёмный лес 💀 [Вероятность боя: 70%]
+# Криминальный район 💀 [Вероятность стычки: 80%]
+# Территория мутантов 💀 [Вероятность нападения: 90%]
+
+# === ВАШИ УНИКАЛЬНЫЕ ЦЕПОЧКИ ===
+# Создайте свои маршруты (удалите # чтобы активировать)
+# Деревня рыбаков → Лодка → Озеро → Затонувший город → Портал в Атлантиду
+# Кибергород → Метавселенная → Нейросеть → Искусственный интеллект → Сознание машины</textarea>
+            </div>
+
+            <div class="board" id="artifactsBoard">
+                <div class="board-header">
+                    <div class="board-title">🔮 Настройки артефактов</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyArtifactsBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearArtifactsBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Инструкция:</strong> Удалите символ # в начале строки, чтобы активировать элемент. Активированные строки попадут в итоговое ТЗ.
+                </div>
+                <textarea class="preset-content" id="artifactsContent">
+# === ТИПЫ АРТЕФАКТОВ ===
+# Активируйте типы артефактов удалением #
+# Боевые (увеличивают урон, защиту)
+# Магические (усиливают заклинания)
+# Утилитарные (открывают пути)
+# Сюжетные (для основного квеста)
+# Легендарные (уникальные, мощные)
+# Потребляемые (одноразовые)
+
+# === ПРИМЕРЫ АРТЕФАКТОВ ===
+# Конкретные артефакты для игры
+# "Огненный амулет: +10 к огненной магии"
+# "Карта сокровищ: открывает тайники"
+# "Ключ от древнего храма: доступ к секретной зоне"
+# "Эликсир здоровья: восстанавливает 50 HP"
+# "Плащ-невидимка: скрывает от врагов"
+# "Посох магии: +20 к силе заклинаний"
+
+# === СИСТЕМА ПОЛУЧЕНИЯ ===
+# Как игрок будет получать артефакты
+# Находится в сундуках
+# Покупается у торговцев
+# Награда за квесты
+# Создается через крафтинг
+# Падает с боссов
+
+# === ОГРАНИЧЕНИЯ ===
+# Баланс игровой механики
+# Максимум 6 артефактов в инвентаре
+# Некоторые требуют определенного уровня
+# Редкие артефакты уникальны</textarea>
+            </div>
+
+            <div class="board" id="manaBoard">
+                <div class="board-header">
+                    <div class="board-title">⚡ Настройки системы маны</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyManaBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearManaBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Инструкция:</strong> Удалите символ # в начале строки, чтобы активировать элемент. Активированные строки попадут в итоговое ТЗ.
+                </div>
+                <textarea class="preset-content" id="manaContent">
+# === ТИПЫ МАНЫ ===
+# Выберите типы маны для вашей игры
+# Стихийная (огонь, вода, воздух, земля)
+# Темная (некромантия, проклятия)
+# Светлая (исцеление, защита)
+# Хаотическая (телепортация, иллюзии)
+# Природная (растительность, животные)
+# Психическая (разум, эмоции)
+
+# === ХАРАКТЕРИСТИКИ МАНЫ ===
+# Базовые настройки системы
+# Базовый запас: 100 единиц
+# Восстановление: 10 ед./ход (естественное)
+# Максимум: 200 единиц
+# Стоимость заклинаний: 5-50 единиц
+
+# === ПРАВИЛА СИСТЕМЫ ===
+# Основные механизмы работы маны
+# Восстановление: естественное + медитация
+# Влияние: ограничивает заклинания, усиливает артефакты
+# Комбинации: смешение типов маны дает новые эффекты
+# Ограничения: некоторые заклинания требуют определенного уровня
+
+# === СПОСОБЫ ВОССТАНОВЛЕНИЯ ===
+# Как игрок может восстанавливать ману
+# Естественная регенерация (медленная)
+# Медитация (быстрая, требует времени)
+# Зелья маны (мгновенное, ограничено)
+# Специальные локации (источники маны)</textarea>
+            </div>
+
+            <div class="board" id="heroesBoard">
+                <div class="board-header">
+                    <div class="board-title">🦸 Герой и Враги</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyHeroesBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearHeroesBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Инструкция:</strong> Удалите символ # в начале строки, чтобы активировать элемент. Активированные строки попадут в итоговое ТЗ.
+                </div>
+                <textarea class="preset-content" id="heroesContent">
+# === ГЛАВНЫЙ ГЕРОЙ ===
+# Активируйте характеристики главного героя
+# Имя: Аэлиан - молодой маг с даром предвидения
+# Происхождение: сирота, воспитанный в магической академии
+# Характер: любознательный, сострадательный, но нерешительный
+# Мотивация: найти своих настоящих родителей и раскрыть тайну происхождения
+# Слабости: слишком доверчив, боится принимать важные решения
+# Особенности: может видеть фрагменты будущего во снах
+
+# === СПОСОБНОСТИ ГЕРОЯ ===
+# Базовые навыки и умения
+# Магия стихий (огонь, вода, воздух, земля)
+# Исцеление и защита
+# Предвидение (ограниченное, требует много маны)
+# Переговоры и убеждение
+# Скрытность и незаметность
+
+# === РАЗВИТИЕ ГЕРОЯ ===
+# Как герой будет развиваться в игре
+# Дерево навыков с ветвлениями
+# Моральный выбор влияет на способности
+# Отношения с NPC открывают новые умения
+# Артефакты усиливают определенные навыки
+
+# === ТИПЫ ВРАГОВ ===
+# Активируйте типы врагов для игры
+# Боссы (уникальные, с особыми способностями)
+# Обычные (стандартные противники)
+# Нейтральные (могут стать союзниками)
+# Рейдовые (очень сильные, для группы)
+# Мини-боссы (сильнее обычных, слабее боссов)
+
+# === ПРИМЕРЫ ВРАГОВ ===
+# Конкретные противники и их особенности
+# "Темный волшебник Малкадор: слаб к светлой мане, ищет артефакт вечной жизни"
+# "Гоблины-разбойники: слабы к огненной магии, нападают на торговые караваны"
+# "Призраки забытой цивилизации: иммунны к физическим атакам, охраняют древние руины"
+# "Дракон Пламени: силен против всех типов, кроме льда, защищает свое гнездо"
+# "Некромант Заратул: призывает мертвецов, стремится создать армию нежити"
+# "Вампир-аристократ: восстанавливает здоровье от укусов, ищет древний артефакт"
+
+# === СИСТЕМА СЛОЖНОСТИ ===
+# Настройки баланса и прогрессии
+# Враги становятся сильнее по мере прогресса
+# Уникальные способности у боссов
+# Слабые места у каждого типа врагов
+# Возможность избежать боя через диалог
+
+# === НАГРАДЫ ЗА ПОБЕДУ ===
+# Что получает игрок за победу
+# Опыт и золото
+# Редкие артефакты с боссов
+# Ключевые предметы для сюжета
+# Доступ к новым локациям
+# Улучшение репутации с фракциями
+
+# === ОСОБЫЕ МЕХАНИКИ ===
+# Дополнительные системы взаимодействия
+# Система репутации с различными фракциями
+# Возможность вербовать некоторых врагов
+# Моральный выбор в диалогах с противниками
+# Альтернативные пути прохождения через убеждение</textarea>
+            </div>
+
+            <div class="board" id="economyBoard">
+                <div class="board-header">
+                    <div class="board-title">💰 Экономика и боевая система</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="applyEconomyBtn">
+                            <span>✅</span>
+                            Применить
+                        </button>
+                        <button class="board-action-btn clear" id="clearEconomyBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="instruction">
+                    💡 <strong>Настройте экономику и боевые механики:</strong> Валюта, цены, награды, система боя.
+                </div>
+                <textarea class="preset-content" id="economyContent">
+# === ЭКОНОМИКА ===
+# Денежная система и торговля
+# Основная валюта: золотые монеты
+# Альтернативные валюты: магические кристаллы, репутация
+# Источники дохода: квесты, торговля, победа над врагами
+# Расходы: снаряжение, зелья, обучение, взятки
+
+# === ЦЕНЫ И ТОРГОВЛЯ ===
+# Баланс цен в игре
+# Зелье здоровья: 50 золотых
+# Зелье маны: 75 золотых
+# Обычное оружие: 100-300 золотых
+# Магическое оружие: 500-2000 золотых
+# Редкие артефакты: 5000+ золотых
+# Стоимость обучения: 200 золотых за уровень
+
+# === СИСТЕМА НАГРАД ===
+# Награды за выполнение заданий
+# Малый квест: 100-300 золотых
+# Средний квест: 400-800 золотых
+# Большой квест: 1000-2500 золотых
+# Эпический квест: 5000+ золотых
+# Бонусы за обнаружение секретов: +50% к награде
+
+# === БОЕВАЯ СИСТЕМА ===
+# Механики боя и характеристики
+# Базовый урон: 10-20 единиц
+# Критический удар: x2 урона (шанс 15%)
+# Защита: снижает получаемый урон на 1-10 единиц
+# Инициатива: определяет порядок ходов
+# Уклонение: шанс 20% избежать атаки
+
+# === ВАРИАНТЫ РАЗРЕШЕНИЯ КОНФЛИКТОВ ===
+[1] [БОЙ] Атаковать напрямую (риск травм)
+[2] [ПЕРЕГОВОРЫ] Убедить/обмануть (требует харизмы)
+[3] [СКРЫТНОСТЬ] Уйти незамеченным (требует ловкости)
+[4] [МАГИЯ] Использовать заклинания (стоимость маны)
+[5] [ПОДКУП] Предложить деньги/артефакты
+[6] [ЗАПУГИВАНИЕ] Использовать репутацию
+
+# === МЕХАНИКА АКТИВАЦИИ УГРОЗ ===
+# Вероятность столкновения = Уровень угрозы + Модификаторы
+# Модификаторы:
+# - Неудачная скрытность: +20%
+# - Убийство противников: +10% к бдительности
+# - Успешный подкуп: -30% на 2 хода
+# - Обнаружение шпиона: +40% (погоня)
+
+# === ДИНАМИЧЕСКАЯ ЭСКАЛАЦИЯ ===
+- При провале скрытности: +20% угрозы во всех связанных локациях
+- Убийство противников: +10% к бдительности врагов
+- Успешный подкуп: -30% угрозы в текущей зоне на 2 хода
+- Обнаружение шпиона: Триггер погони через 3 локации
+
+# === БОЕВАЯ МЕХАНИКА ===
+# Система боя и характеристики
+# Типы атак: физическая, магическая, дальняя, ближняя
+# Сопротивления: броня (физика), резисты (магия)
+# Эффекты статусов: оглушение, отравление, горение, заморозка
+# Критические попадания: шанс 15%, урон x2
+# Уклонение: базовый шанс 20%, зависит от ловкости
+
+# === ТАКТИЧЕСКИЕ ВОЗМОЖНОСТИ ===
+# Дополнительные опции в бою
+# Защита: уменьшает получаемый урон на 50% на 1 ход
+# Концентрация: увеличивает шанс крита на 25% на следующий ход
+# Бегство: попытка избежать боя (шанс 60%)
+# Использование предметов: зелья, свитки, одноразовые артефакты
+
+# === СИСТЕМА УРОВНЕЙ И ПРОГРЕССИИ ===
+# Развитие персонажа в бою
+# Опыт за победу: 50-200 XP в зависимости от противника
+# Уровни: максимум 50, с повышением характеристик
+# Характеристики: сила, ловкость, интеллект, выносливость
+# Навыки: пассивные и активные способности</textarea>
+            </div>
+
+            <div class="board" id="summaryBoard">
+                <div class="board-header">
+                    <div class="board-title">📋 Итоговое ТЗ для ИИ</div>
+                    <div class="board-actions">
+                        <button class="board-action-btn apply" id="generateTZBtn">
+                            <span>🎮</span>
+                            Собрать ТЗ
+                        </button>
+                        <button class="board-action-btn clear" id="clearSummaryBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="output-content" id="summaryContent">
+// Здесь будет отображено собранное ТЗ для ИИ-движка...
+Нажмите "Собрать ТЗ" для генерации полного технического задания.
+                </div>
+            </div>
+
+            <!-- Область вывода -->
+            <div class="output-section">
+                <div class="output-header">
+                    <div class="output-title">Результат генерации:</div>
+                    <div class="output-actions">
+                        <button class="output-action-btn copy" id="copyOutputBtn">
+                            <span>📋</span>
+                            Копировать ТЗ
+                        </button>
+                        <button class="output-action-btn clear" id="clearOutputBtn">
+                            <span>❌</span>
+                            Очистить
+                        </button>
+                    </div>
+                </div>
+                <div class="output-content" id="outputContent">
+// Здесь будет отображен результат работы конструктора...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- Скрытый input для импорта файлов -->
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+
+    <script>
+        class QuestAlchemist {
+            constructor() {
+                this.saveTimeout = null;
+                this.DEBOUNCE_DELAY = 500;
+                this.currentBoard = 'idea';
+                this.fileInput = document.getElementById('fileInput');
+
+                this.initializeElements();
+                this.attachEventListeners();
+                this.loadFromStorage();
+                this.applyTheme();
+                this.showBoard(this.currentBoard);
+            }
+
+            initializeElements() {
+                // Элементы панели инструментов
+                this.ideaBtn = document.getElementById('ideaBtn');
+                this.genresBtn = document.getElementById('genresBtn');
+                this.locationsBtn = document.getElementById('locationsBtn');
+                this.routesBtn = document.getElementById('routesBtn');
+                this.artifactsBtn = document.getElementById('artifactsBtn');
+                this.manaBtn = document.getElementById('manaBtn');
+                this.heroesBtn = document.getElementById('heroesBtn');
+                this.economyBtn = document.getElementById('economyBtn');
+                this.summaryBtn = document.getElementById('summaryBtn');
+                this.importBtn = document.getElementById('importBtn');
+                this.exportBtn = document.getElementById('exportBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.saveBtn = document.getElementById('saveBtn');
+
+                // Доски
+                this.ideaBoard = document.getElementById('ideaBoard');
+                this.genresBoard = document.getElementById('genresBoard');
+                this.locationsBoard = document.getElementById('locationsBoard');
+                this.routesBoard = document.getElementById('routesBoard');
+                this.artifactsBoard = document.getElementById('artifactsBoard');
+                this.manaBoard = document.getElementById('manaBoard');
+                this.heroesBoard = document.getElementById('heroesBoard');
+                this.economyBoard = document.getElementById('economyBoard');
+                this.summaryBoard = document.getElementById('summaryBoard');
+
+                // Контент досок
+                this.ideaContent = document.getElementById('ideaContent');
+                this.genresContent = document.getElementById('genresContent');
+                this.locationsContent = document.getElementById('locationsContent');
+                this.routesContent = document.getElementById('routesContent');
+                this.artifactsContent = document.getElementById('artifactsContent');
+                this.manaContent = document.getElementById('manaContent');
+                this.heroesContent = document.getElementById('heroesContent');
+                this.economyContent = document.getElementById('economyContent');
+                this.summaryContent = document.getElementById('summaryContent');
+
+                // Кнопки действий
+                this.applyIdeaBtn = document.getElementById('applyIdeaBtn');
+                this.clearIdeaBtn = document.getElementById('clearIdeaBtn');
+                this.applyGenresBtn = document.getElementById('applyGenresBtn');
+                this.clearGenresBtn = document.getElementById('clearGenresBtn');
+                this.applyLocationsBtn = document.getElementById('applyLocationsBtn');
+                this.clearLocationsBtn = document.getElementById('clearLocationsBtn');
+                this.applyRoutesBtn = document.getElementById('applyRoutesBtn');
+                this.clearRoutesBtn = document.getElementById('clearRoutesBtn');
+                this.applyArtifactsBtn = document.getElementById('applyArtifactsBtn');
+                this.clearArtifactsBtn = document.getElementById('clearArtifactsBtn');
+                this.applyManaBtn = document.getElementById('applyManaBtn');
+                this.clearManaBtn = document.getElementById('clearManaBtn');
+                this.applyHeroesBtn = document.getElementById('applyHeroesBtn');
+                this.clearHeroesBtn = document.getElementById('clearHeroesBtn');
+                this.applyEconomyBtn = document.getElementById('applyEconomyBtn');
+                this.clearEconomyBtn = document.getElementById('clearEconomyBtn');
+                this.generateTZBtn = document.getElementById('generateTZBtn');
+                this.clearSummaryBtn = document.getElementById('clearSummaryBtn');
+
+                // Выходные элементы
+                this.outputContent = document.getElementById('outputContent');
+                this.copyOutputBtn = document.getElementById('copyOutputBtn');
+                this.clearOutputBtn = document.getElementById('clearOutputBtn');
+
+                // Вспомогательные элементы
+                this.statusMessage = document.getElementById('statusMessage');
+                this.themeToggle = document.getElementById('themeToggle');
+                this.themeCheckbox = document.getElementById('themeCheckbox');
+                this.interviewModeCheckbox = document.getElementById('interviewModeCheckbox');
+            }
+
+            attachEventListeners() {
+                // Кнопки переключения досок
+                this.ideaBtn.addEventListener('click', () => this.showBoard('idea'));
+                this.genresBtn.addEventListener('click', () => this.showBoard('genres'));
+                this.locationsBtn.addEventListener('click', () => this.showBoard('locations'));
+                this.routesBtn.addEventListener('click', () => this.showBoard('routes'));
+                this.artifactsBtn.addEventListener('click', () => this.showBoard('artifacts'));
+                this.manaBtn.addEventListener('click', () => this.showBoard('mana'));
+                this.heroesBtn.addEventListener('click', () => this.showBoard('heroes'));
+                this.economyBtn.addEventListener('click', () => this.showBoard('economy'));
+                this.summaryBtn.addEventListener('click', () => this.showBoard('summary'));
+
+                // Кнопки действий
+                this.applyIdeaBtn.addEventListener('click', () => this.applyBoardSettings('idea'));
+                this.clearIdeaBtn.addEventListener('click', () => this.clearBoard('idea'));
+                this.applyGenresBtn.addEventListener('click', () => this.applyBoardSettings('genres'));
+                this.clearGenresBtn.addEventListener('click', () => this.clearBoard('genres'));
+                this.applyLocationsBtn.addEventListener('click', () => this.applyBoardSettings('locations'));
+                this.clearLocationsBtn.addEventListener('click', () => this.clearBoard('locations'));
+                this.applyRoutesBtn.addEventListener('click', () => this.applyBoardSettings('routes'));
+                this.clearRoutesBtn.addEventListener('click', () => this.clearBoard('routes'));
+                this.applyArtifactsBtn.addEventListener('click', () => this.applyBoardSettings('artifacts'));
+                this.clearArtifactsBtn.addEventListener('click', () => this.clearBoard('artifacts'));
+                this.applyManaBtn.addEventListener('click', () => this.applyBoardSettings('mana'));
+                this.clearManaBtn.addEventListener('click', () => this.clearBoard('mana'));
+                this.applyHeroesBtn.addEventListener('click', () => this.applyBoardSettings('heroes'));
+                this.clearHeroesBtn.addEventListener('click', () => this.clearBoard('heroes'));
+                this.applyEconomyBtn.addEventListener('click', () => this.applyBoardSettings('economy'));
+                this.clearEconomyBtn.addEventListener('click', () => this.clearBoard('economy'));
+                this.generateTZBtn.addEventListener('click', () => this.generateTZ());
+                this.clearSummaryBtn.addEventListener('click', () => this.clearOutput());
+
+                // Основные кнопки
+                this.importBtn.addEventListener('click', () => this.importSRC());
+                this.exportBtn.addEventListener('click', () => this.exportSRC());
+                this.resetBtn.addEventListener('click', () => this.resetAll());
+                this.saveBtn.addEventListener('click', () => this.saveToStorage());
+                this.copyOutputBtn.addEventListener('click', () => this.copyToClipboard());
+                this.clearOutputBtn.addEventListener('click', () => this.clearOutput());
+
+                // Обработчик импорта файлов
+                this.fileInput.addEventListener('change', (e) => this.handleFileImport(e));
+
+                // Слушатели изменений
+                this.themeCheckbox.addEventListener('change', () => this.toggleTheme());
+                this.interviewModeCheckbox.addEventListener('change', () => this.saveToStorage());
+
+                // Слушатели ввода для автосохранения
+                this.ideaContent.addEventListener('input', () => this.debouncedSave());
+                this.genresContent.addEventListener('input', () => this.debouncedSave());
+                this.locationsContent.addEventListener('input', () => this.debouncedSave());
+                this.routesContent.addEventListener('input', () => this.debouncedSave());
+                this.artifactsContent.addEventListener('input', () => this.debouncedSave());
+                this.manaContent.addEventListener('input', () => this.debouncedSave());
+                this.heroesContent.addEventListener('input', () => this.debouncedSave());
+                this.economyContent.addEventListener('input', () => this.debouncedSave());
+            }
+
+            showBoard(boardType) {
+                // Скрываем все доски
+                this.ideaBoard.classList.remove('active');
+                this.genresBoard.classList.remove('active');
+                this.locationsBoard.classList.remove('active');
+                this.routesBoard.classList.remove('active');
+                this.artifactsBoard.classList.remove('active');
+                this.manaBoard.classList.remove('active');
+                this.heroesBoard.classList.remove('active');
+                this.economyBoard.classList.remove('active');
+                this.summaryBoard.classList.remove('active');
+
+                // Показываем нужную доску
+                switch(boardType) {
+                    case 'idea':
+                        this.ideaBoard.classList.add('active');
+                        break;
+                    case 'genres':
+                        this.genresBoard.classList.add('active');
+                        break;
+                    case 'locations':
+                        this.locationsBoard.classList.add('active');
+                        break;
+                    case 'routes':
+                        this.routesBoard.classList.add('active');
+                        break;
+                    case 'artifacts':
+                        this.artifactsBoard.classList.add('active');
+                        break;
+                    case 'mana':
+                        this.manaBoard.classList.add('active');
+                        break;
+                    case 'heroes':
+                        this.heroesBoard.classList.add('active');
+                        break;
+                    case 'economy':
+                        this.economyBoard.classList.add('active');
+                        break;
+                    case 'summary':
+                        this.summaryBoard.classList.add('active');
+                        this.updateSummaryPreview();
+                        break;
+                }
+
+                this.currentBoard = boardType;
+                this.saveToStorage();
+            }
+
+            applyBoardSettings(boardType) {
+                let content, boardName;
+
+                switch(boardType) {
+                    case 'idea':
+                        content = this.ideaContent.value;
+                        boardName = 'идея игры';
+                        break;
+                    case 'genres':
+                        content = this.genresContent.value;
+                        boardName = 'жанры';
+                        break;
+                    case 'locations':
+                        content = this.locationsContent.value;
+                        boardName = 'локации';
+                        break;
+                    case 'routes':
+                        content = this.routesContent.value;
+                        boardName = 'маршруты';
+                        break;
+                    case 'artifacts':
+                        content = this.artifactsContent.value;
+                        boardName = 'артефакты';
+                        break;
+                    case 'mana':
+                        content = this.manaContent.value;
+                        boardName = 'система маны';
+                        break;
+                    case 'heroes':
+                        content = this.heroesContent.value;
+                        boardName = 'герой и враги';
+                        break;
+                    case 'economy':
+                        content = this.economyContent.value;
+                        boardName = 'экономика и боевая система';
+                        break;
+                }
+
+                if (boardType === 'idea') {
+                    if (content.trim()) {
+                        this.showStatus(`Применена ${boardName}`);
+                    } else {
+                        this.showStatus(`Опишите ${boardName}`, true);
+                    }
+                } else {
+                    const selectedItems = this.extractActiveItems(content);
+
+                    if (selectedItems.length > 0) {
+                        this.showStatus(`Применены настройки ${boardName}: ${selectedItems.slice(0, 3).join(', ')}${selectedItems.length > 3 ? '...' : ''}`);
+                    } else {
+                        this.showStatus(`Выберите элементы ${boardName} (удалите # с нужных строк)`, true);
+                    }
+                }
+            }
+
+            extractActiveItems(text) {
+                const lines = text.split('\n');
+                const activeItems = [];
+
+                for (const line of lines) {
+                    const trimmedLine = line.trim();
+                    // Ищем строки без # в начале (активные элементы)
+                    if (trimmedLine && !trimmedLine.startsWith('#') && !trimmedLine.startsWith('//')) {
+                        // Пропускаем пустые строки и разделители
+                        if (trimmedLine !== '' &&
+                            !trimmedLine.startsWith('===') &&
+                            !trimmedLine.startsWith('---') &&
+                            !trimmedLine.includes('Инструкция:') &&
+                            !trimmedLine.includes('💡')) {
+                            activeItems.push(trimmedLine);
+                        }
+                    }
+                }
+
+                return activeItems;
+            }
+
+            clearBoard(boardType) {
+                switch(boardType) {
+                    case 'idea':
+                        this.ideaContent.value = '';
+                        break;
+                    case 'genres':
+                        this.genresContent.value = '';
+                        break;
+                    case 'locations':
+                        this.locationsContent.value = '';
+                        break;
+                    case 'routes':
+                        this.routesContent.value = '';
+                        break;
+                    case 'artifacts':
+                        this.artifactsContent.value = '';
+                        break;
+                    case 'mana':
+                        this.manaContent.value = '';
+                        break;
+                    case 'heroes':
+                        this.heroesContent.value = '';
+                        break;
+                    case 'economy':
+                        this.economyContent.value = '';
+                        break;
+                }
+                this.saveToStorage();
+                this.showStatus(`Доска ${boardType} очищена`);
+            }
+
+            generateTZ() {
+                const isInterviewMode = this.interviewModeCheckbox.checked;
+
+                if (isInterviewMode) {
+                    this.generateInterviewPrompt();
+                } else {
+                    this.generateFinalTZ();
+                }
+            }
+
+            generateInterviewPrompt() {
+                const gameIdea = this.ideaContent.value.trim() || "пока не указана";
+                
+                // Собираем все активные элементы из всех досок
+                const selectedSettings = {
+                    жанры: this.extractActiveItems(this.genresContent.value),
+                    локации: this.extractActiveItems(this.locationsContent.value),
+                    маршруты: this.extractActiveItems(this.routesContent.value),
+                    артефакты: this.extractActiveItems(this.artifactsContent.value),
+                    мана: this.extractActiveItems(this.manaContent.value),
+                    герои_и_враги: this.extractActiveItems(this.heroesContent.value),
+                    экономика_и_бой: this.extractActiveItems(this.economyContent.value)
+                };
+
+                // Формируем детальное описание выбранных настроек
+                let settingsDescription = "=== ВЫБРАННЫЕ НАСТРОЙКИ ===\n\n";
+                
+                if (gameIdea && gameIdea !== "пока не указана") {
+                    settingsDescription += `💡 ОСНОВНАЯ ИДЕЯ:\n${gameIdea}\n\n`;
+                }
+                
+                Object.entries(selectedSettings).forEach(([category, items]) => {
+                    if (items.length > 0) {
+                        const categoryName = this.getCategoryDisplayName(category);
+                        settingsDescription += `🎯 ${categoryName}:\n`;
+                        items.forEach(item => settingsDescription += `• ${item}\n`);
+                        settingsDescription += '\n';
+                    }
+                });
+
+                const prompt = `🎭 РЕЖИМ ИНТЕРВЬЮ: АКТИВИРОВАН
+
+${settingsDescription}
+
+=== ИНСТРУКЦИЯ ДЛЯ ИНТЕРВЬЮЕРА ===
+
+Ты — опытный геймдизайнер, который проводит глубокое интервью с игроком для создания идеального ТЗ для текстовой RPG квестовой игры.
+
+КОНТЕКСТ ПРОЕКТА:
+• Тип игры: текстовая RPG с квестами
+• Платформа: ИИ-движок для генерации контента
+• Цель: создать immersive текстовое приключение с живым миром
+
+КРИТИЧЕСКИ ВАЖНЫЕ ЭЛЕМЕНТЫ (обязательно выяснить):
+
+1. ГЛАВНЫЙ ДРАМАТУРГИЧЕСКИЙ РЕСУРС:
+   • Какой основной ресурс будет управлять сюжетом? (MRP, EP, Рассудок, Время и т.д.)
+   • Максимальное значение, правила восстановления/траты
+   • Критические последствия при истощении
+
+2. МЕХАНИКА ХАОС-ФАН (ОБЯЗАТЕЛЬНО):
+   • Система бросков 1d100 для ключевых действий
+   • Модификаторы: настроение, репутация, типы ресурсов
+   • Суперпозиция нестабильных предметов (☠ проклятые, ✨ супер)
+   • Показ риска и выбор "рискнуть?"
+
+3. ЖИВЫЕ ЛОКАЦИИ:
+   • Минимум 3 NPC на локацию (2 сюжетных + 1-2 случайных)
+   • Экономика: торговля, услуги, цены
+   • Ресурсы и точки крафта
+   • Скрытые секреты и эмоциональный фон
+
+4. СТРОГАЯ ПОСЛЕДОВАТЕЛЬНОСТЬ:
+   • Запрет прыжков между локациями
+   • Переход только после полного отыгрыша текущей
+   • Реальное время [ЧЧ:ММ] для иммерсивности
+
+СТРУКТУРА ИНТЕРВЬЮ:
+1. Начни с самого важного — механики хаос-фан
+2. Уточни главный драматургический ресурс  
+3. Детализируй выбранные настройки (жанры, локации и т.д.)
+4. Спроси о предпочтениях по атмосфере и темпу
+
+ФОРМАТ: 2-3 вопроса за раз, конкретно и по делу.`;
+
+                this.outputContent.textContent = prompt;
+                this.showStatus('Интервью запущено — все настройки переданы ИИ-интервьюеру');
+            }
+
+            // Вспомогательный метод для красивых названий категорий
+            getCategoryDisplayName(category) {
+                const names = {
+                    'жанры': 'ЖАНРЫ И АТМОСФЕРА',
+                    'локации': 'ЛОКАЦИИ И УГРОЗЫ', 
+                    'маршруты': 'МАРШРУТЫ И ЦЕПОЧКИ',
+                    'артефакты': 'АРТЕФАКТЫ И ПРЕДМЕТЫ',
+                    'мана': 'МАГИЧЕСКАЯ СИСТЕМА',
+                    'герои_и_враги': 'ГЕРОЙ И ПЕРСОНАЖИ',
+                    'экономика_и_бой': 'ЭКОНОМИКА И БОЕВАЯ СИСТЕМА'
+                };
+                return names[category] || category.toUpperCase();
+            }
+
+            generateFinalTZ() {
+                const gameIdea = this.ideaContent.value.trim();
+                const selectedSettings = {
+                    жанры: this.extractActiveItems(this.genresContent.value),
+                    локации: this.extractActiveItems(this.locationsContent.value),
+                    маршруты: this.extractActiveItems(this.routesContent.value),
+                    артефакты: this.extractActiveItems(this.artifactsContent.value),
+                    мана: this.extractActiveItems(this.manaContent.value),
+                    герои_и_враги: this.extractActiveItems(this.heroesContent.value),
+                    экономика_и_бой: this.extractActiveItems(this.economyContent.value)
+                };
+                
+                const projectName = this.generateProjectName(gameIdea);
+
+                // Формируем раздел с выбранными настройками
+                let settingsSection = "=== ВЫБРАННЫЕ НАСТРОЙКИ ===\n\n";
+                
+                if (gameIdea) {
+                    settingsSection += `💡 ОСНОВНАЯ ИДЕЯ:\n${gameIdea}\n\n`;
+                }
+                
+                Object.entries(selectedSettings).forEach(([category, items]) => {
+                    if (items.length > 0) {
+                        const categoryName = this.getCategoryDisplayName(category);
+                        settingsSection += `🎯 ${categoryName}:\n`;
+                        items.forEach(item => settingsSection += `• ${item}\n`);
+                        settingsSection += '\n';
+                    }
+                });
+
+                const tz = `ОБНОВЛЁННОЕ ИДЕАЛЬНОЕ ТЕХНИЧЕСКОЕ ЗАДАНИЕ 3.0: «PROJECT: ${projectName}»
+
+${settingsSection}
+=== ОБЯЗАТЕЛЬНЫЕ УНИВЕРСАЛЬНЫЕ ПРАВИЛА (НИКОГДА НЕ МЕНЯТЬ) ===
+
+1. ЗАПРЕТ ПРЫЖКОВ ПО ЛОКАЦИЯМ
+   Переход только после полного отыгрыша текущей локации (мини-квест / ключевой предмет / диалог / секрет / триггер).
+   Последовательность строго A → B → C. Тайминги реальные: [Время: ЧЧ:ММ]
+
+2. КАЖДАЯ ЛОКАЦИЯ — ЖИВАЯ
+   Минимум:
+   • 3 NPC (2 сюжетных + 1–2 случайных)
+   • 1 точка торговли/услуг (обязательная экономика)
+   • 1–2 ресурса/крафт-точки
+   • 1 скрытый секрет
+   • Эмоциональный фон (± значения)
+
+3. ФОРМАТ ВЫВОДА СЕССИИ (жёсткий)
+[Локация: Название • Время: ЧЧ:ММ]
+[HP: X/100 | Главный ресурс: X/100 | Валюта: X | Репутация: Уровень]
+[Инвентарь: … (макс. 8)]
+[Цель: текущая задача]
+[Кинематографическое описание + Эмо-фон]
+Доступные действия:
+[1] [ТИП] Описание
+[2] [ТИП] Описание
+[3] [ТИП] Описание
+[4] [ТИП] Описание (или свой вариант)
+
+4. УНИВЕРСАЛЬНЫЕ КОМАНДЫ (всегда доступны)
+с:мир • с:отношения • с:задания • с:локации • с:инвентарь • с:статус • с:карта • с:репутация
+с:калибровка → [правка] — мгновенно меняет мир/механики/сюжет (высший приоритет, ретро-совместимо)
+
+5. ГЛАВНЫЙ ДРАМАТУРГИЧЕСКИЙ РЕСУРС
+(определяется игроком в интервью; по умолчанию — Эмоциональные очки (EP) как в Emotional Vampire)
+- Максимум: 100
+- Восстановление: отдых, медитация, эмоциональный контакт, предметы
+- Трата: моральные выборы, крафт, тяжёлые диалоги
+- > 70 + высокая эмпатия → доступ к «человеческим» концовкам
+
+6. СИСТЕМА КОНЦОВОК
+- Минимум 4 варианта (включая кастомную через с:калибровка)
+- Зависят от главного ресурса, спасённых NPC, репутации, моральных выборов
+
+7. ЭКОНОМИЧЕСКОЕ ВЗАИМОДЕЙСТВИЕ — В КАЖДОЙ ЛОКАЦИИ
+Торговля • услуги • подкуп • инвестиции • цены динамические (репутация + навык торговли)
+
+=== СПЕЦИФИКА ЭТОЙ ИГРЫ ===
+Локации: ${selectedSettings.локации.length ? selectedSettings.локации.join(' → ') : 'генерируются по сеттингу'}
+Маршруты: ${selectedSettings.маршруты.length ? selectedSettings.маршруты.join(' → ') : 'линейно-ветвящийся путь'}
+
+=== СУПЕР-ВАЖНЫЕ ИНСТРУКЦИИ ДВИЖКУ 3.0 (вставляются в КАЖДОЕ ТЗ) ===
+Игра не может перейти на следующую локацию без отыгрыша квеста или миниквеста на текущей локации, без нахождения ключевых предметов (карты, ключи, артефакты), общения с NPC или других сюжетных триггеров.
+Игра должна последовательно идти от A → B → C, нельзя перескакивать локации.
+Каждая локация обязана содержать возможности для экономического взаимодействия с NPC и задействовать все активные механики.
+Команда с:калибровка доступна игроку в любой момент и имеет высший приоритет.
+Дополнения к ТЗ для живой интерактивной игры
+1. Сценарные слои поверх механики
+
+Каждая локация должна иметь живые сцены:
+
+NPC говорят, делают абсурдные и комические действия
+
+Гэги и случайные события визуализируются и ощущаются игроком
+
+Баффы/дебафы и MCP/DPS/MRP показываются через сцену и реакцию персонажей, а не только цифрами
+
+2. Диалог + действия
+
+Любой выбор игрока сопровождается текстовым описанием эмоций, юмора, абсурда и последствий
+
+Механические показатели (MCP, DПС, MRP) отображаются вторично, через последствия сцен
+
+Пример: «Ты протягиваешь Дяде Витеку малую мечту. Он роняет карманную карту, матерясь и танцуя на мосту. MCP +7, DПС +3»
+
+3. Визуальные и кинематографические эффекты
+
+Описывать движение, свет, звук, погоду, атмосферу
+
+Отражать динамику сцены: настроение NPC, эмоции героя, неожиданности
+
+Использовать мини-анимации текста (звук, мерцание, движение объектов)
+
+4. Живая реакция NPC
+
+NPC не просто дают ресурсы или информацию
+
+Каждое взаимодействие включает эмоцию, реакцию и гэг
+
+Возможность реального диалога, с выбором реплик, влияющих на поведение NPC
+
+5. События не только численные
+
+MCP, DПС, MRP остаются, но игрок ощущает их через события и эмоции, а не только цифры
+
+Пример: «Ойнет хихикает, когда видит гаджет настроения, и бросает взгляд, мгновенно увеличивающий MRP»
+
+6. Адаптивная кинематографичность
+
+Когда всё идёт слишком гладко, система автоматически вставляет комические препятствия и хаотические события
+
+Пример: внезапный дождь, банан на дороге, спорящие NPC, случайный гэг
+
+7. Интерактивные мини-эпизоды
+
+Каждая локация — мини-сценка с вариантами действий
+
+Выбор игрока влияет на сюжет, юмор и ресурсы, но при этом описан живо и с гэгами
+
+8. Режиссёрский контроль
+
+Игрок может включать/выключать подсказки механики
+
+В режиме «режиссёр» игрок видит только живую сцену и юмор, а численные показатели работают под сценой
+
+9. Баланс механики и сюжета
+
+Все численные механики (MCP, DПС, MRP) должны интегрироваться в сцены, а не отображаться как таблица
+
+Гэги, юмор и эмоции — приоритет, механика — вторична
+Отображать из статистики например только жизнь и ману осталное через команды
+
+ЗАПУСТИТЕ ПОСЛЕДОВАТЕЛЬНО ВСЕ ЛОКАЦИИ ИГРЫ, НАЧНИТЕ С ПЕРВОЙ.`;
+
+                this.outputContent.textContent = tz;
+                this.showStatus('ИДЕАЛЬНОЕ ТЗ 3.0 сгенерировано — все настройки включены');
+            }
+
+            generateProjectName(idea) {
+                if (!idea) return "БЕЗЫМЯННЫЙ_ПРОЕКТ";
+                
+                // Берем первые 3-4 слова из идеи для названия
+                const words = idea.split(/\s+/).slice(0, 4);
+                return words.map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join('_').replace(/[^a-zA-Z0-9_]/g, '');
+            }
+
+            updateSummaryPreview() {
+                const gameIdea = this.ideaContent.value.trim();
+                const selectedGenres = this.extractActiveItems(this.genresContent.value);
+                const selectedLocations = this.extractActiveItems(this.locationsContent.value);
+                const selectedRoutes = this.extractActiveItems(this.routesContent.value);
+                const selectedArtifacts = this.extractActiveItems(this.artifactsContent.value);
+                const selectedMana = this.extractActiveItems(this.manaContent.value);
+                const selectedHeroes = this.extractActiveItems(this.heroesContent.value);
+                const selectedEconomy = this.extractActiveItems(this.economyContent.value);
+
+                let preview = '=== ПРЕДПРОСМОТР НАСТРОЕК ===\n\n';
+
+                if (gameIdea) {
+                    preview += `💡 ОСНОВНАЯ ИДЕЯ:\n${gameIdea}\n\n`;
+                }
+
+                preview += `🎭 ЖАНРЫ: ${selectedGenres.length > 0 ? selectedGenres.join(', ') : 'не выбраны'}\n`;
+                preview += `🏰 ЛОКАЦИИ: ${selectedLocations.length > 0 ? selectedLocations.join(', ') : 'не выбраны'}\n`;
+                preview += `🛤️ МАРШРУТЫ: ${selectedRoutes.length > 0 ? selectedRoutes.join(' | ') : 'не выбраны'}\n`;
+                preview += `🔮 АРТЕФАКТЫ: ${selectedArtifacts.length > 0 ? selectedArtifacts.join(', ') : 'не выбраны'}\n`;
+                preview += `⚡ МАНА: ${selectedMana.length > 0 ? selectedMana.join(', ') : 'не выбрана'}\n`;
+                preview += `🦸 ГЕРОЙ И ВРАГИ: ${selectedHeroes.length > 0 ? selectedHeroes.join(', ') : 'не выбраны'}\n`;
+                preview += `💰 ЭКОНОМИКА И БОЙ: ${selectedEconomy.length > 0 ? selectedEconomy.join(', ') : 'не выбрана'}\n\n`;
+
+                preview += '💡 Инструкция: Удалите символ # в начале строки на соответствующих досках, чтобы активировать элементы.\n\n';
+                preview += 'Нажмите "Собрать ТЗ" для генерации полного технического задания.';
+
+                this.summaryContent.textContent = preview;
+            }
+
+            exportSRC() {
+                const gameIdea = this.ideaContent.value.trim();
+                const selectedGenres = this.extractActiveItems(this.genresContent.value);
+                const selectedLocations = this.extractActiveItems(this.locationsContent.value);
+                const selectedRoutes = this.extractActiveItems(this.routesContent.value);
+                const selectedArtifacts = this.extractActiveItems(this.artifactsContent.value);
+                const selectedMana = this.extractActiveItems(this.manaContent.value);
+                const selectedHeroes = this.extractActiveItems(this.heroesContent.value);
+                const selectedEconomy = this.extractActiveItems(this.economyContent.value);
+
+                const srcData = {
+                    "версия": "1.4",
+                    "тип": "конструктор_текстовых_игр",
+                    "идея_игры": gameIdea,
+                    "настройки": {
+                        "жанры": selectedGenres,
+                        "локации": selectedLocations,
+                        "маршруты": selectedRoutes,
+                        "артефакты": selectedArtifacts,
+                        "мана": selectedMana,
+                        "герои_и_враги": selectedHeroes,
+                        "экономика_и_бой": selectedEconomy
+                    },
+                    "метаданные": {
+                        "создано": new Date().toISOString(),
+                        "режим_интервью": this.interviewModeCheckbox.checked
+                    }
+                };
+
+                const blob = new Blob([JSON.stringify(srcData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `игровой-конструктор-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                this.showStatus('SRC-файл успешно экспортирован!');
+            }
+
+            importSRC() {
+                this.fileInput.click();
+            }
+
+            handleFileImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+
+                        console.log('Импортируемые данные:', data);
+
+                        // Восстанавливаем данные из файла
+                        if (data.идея_игры) {
+                            this.ideaContent.value = data.идея_игры;
+                        }
+
+                        // Поддерживаем обе структуры: новую (вложенную) и старую (плоскую)
+                        let settings = data.настройки || data;
+
+                        // Восстанавливаем выбранные элементы для каждой доски
+                        if (settings.жанры && Array.isArray(settings.жанры)) {
+                            this.restoreBoardFromArray('genres', settings.жанры);
+                        }
+                        if (settings.локации && Array.isArray(settings.локации)) {
+                            this.restoreBoardFromArray('locations', settings.локации);
+                        }
+                        if (settings.маршруты && Array.isArray(settings.маршруты)) {
+                            this.restoreBoardFromArray('routes', settings.маршруты);
+                        }
+                        if (settings.артефакты && Array.isArray(settings.артефакты)) {
+                            this.restoreBoardFromArray('artifacts', settings.артефакты);
+                        }
+                        if (settings.мана && Array.isArray(settings.мана)) {
+                            this.restoreBoardFromArray('mana', settings.мана);
+                        }
+                        if (settings.герои_и_враги && Array.isArray(settings.герои_и_враги)) {
+                            this.restoreBoardFromArray('heroes', settings.герои_и_враги);
+                        }
+                        if (settings.экономика_и_бой && Array.isArray(settings.экономика_и_бой)) {
+                            this.restoreBoardFromArray('economy', settings.экономика_и_бой);
+                        }
+
+                        if (data.метаданные && data.метаданные.режим_интервью !== undefined) {
+                            this.interviewModeCheckbox.checked = data.метаданные.режим_интервью;
+                        }
+
+                        this.saveToStorage();
+                        this.showStatus('Проект успешно импортирован!');
+
+                        // Обновляем предпросмотр на доске сводки
+                        this.updateSummaryPreview();
+
+                        // Очищаем input для возможности повторного импорта того же файла
+                        event.target.value = '';
+
+                    } catch (err) {
+                        this.showStatus('Ошибка при чтении файла', true);
+                        console.error('Ошибка импорта:', err);
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            restoreBoardFromArray(boardType, activeItems) {
+                let contentElement;
+                let defaultContent;
+
+                switch(boardType) {
+                    case 'genres':
+                        contentElement = this.genresContent;
+                        defaultContent = `# === ОСНОВНЫЕ ЖАНРЫ ===
+# Чтобы активировать жанр - удалите решетку # в начале строки
+# Фэнтези
+# Научная фантастика
+# Киберпанк
+# Хоррор
+# Детектив
+# Романтика
+# Приключения
+# Мистика
+
+# === ГИБРИДЫ ===
+# Активируйте гибриды, удалив решетку #
+# "Фэнтези + Политическая интрига"
+# "Киберпанк + Нуар"
+# "Хоррор + Психологический триллер"
+# "Научная фантастика + Детектив"
+# "Фэнтези + Стимпанк"
+# "Постапокалипсис + Выживание"
+
+# === НАСТРОЙКИ АТМОСФЕРЫ ===
+# Эпический размах
+# Камерная история
+# Мрачная атмосфера
+# Юмористический тон
+# Поэтический стиль
+# Реалистичный подход
+
+# === ВАШИ СОБСТВЕННЫЕ ЖАНРЫ ===
+# Напишите здесь свои уникальные комбинации (уберите # чтобы активировать)
+# "Магический реализм + Городское фэнтези"
+# "Исторический роман + Фантастика"`;
+                        break;
+
+                    case 'locations':
+                        contentElement = this.locationsContent;
+                        defaultContent = `# === ТИПЫ ЛОКАЦИЙ ===
+# Формат: Название [Угроза: X% | Противник | Слабость]
+# Удалите решетку # чтобы выбрать локацию
+#Лес [Угроза: 15% | Серый волк | Слабость: Огонь]
+#Город [Угроза: 25% | Уличные бандиты | Слабость: Запугивание]
+#Подземелье [Угроза: 60% | Скелет-воин | Слабость: Святая магия]
+#Замок [Угроза: 40% | Королевская стража | Слабость: Подкуп]
+#Деревня [Угроза: 10% | Деревенский дурак | Слабость: Обман]
+#Горы [Угроза: 50% | Горный тролль | Слабость: Ловкость]
+#Побережье [Угроза: 20% | Пираты | Слабость: Переговоры]
+#Пустыня [Угроза: 35% | Песчаный червь | Слабость: Вода]
+#Болото [Угроза: 45% | Болотный дух | Слабость: Огонь]
+#Руины [Угроза: 55% | Древний голем | Слабость: Магия]
+
+# === ОСОБЫЕ ЛОКАЦИИ ===
+# Активируйте особые локации
+#Магическая башня [Угроза: 70% | Архимаг | Слабость: Контрмагия]
+#Храм древних [Угроза: 80% | Жрец культа | Слабость: Разум]
+#Подземный город [Угроза: 65% | Тёмные эльфы | Слабость: Свет]
+#Летающий остров [Угроза: 75% | Небесные стражи | Слабость: Земля]
+#Порталы между мирами [Угроза: 90% | Демон-хранитель | Слабость: Запечатывание]
+
+# === СВЯЗИ МЕЖДУ ЛОКАЦИЯМИ ===
+# Эти связи будут учтены в генерации игры
+# Лес → Деревня → Город → Замок
+# Подземелье ← Лес
+# Горы → Пещеры → Древний храм
+# Порт → Корабль → Остров
+
+# === АТМОСФЕРА ЛОКАЦИЙ ===
+# Описания атмосферы для активированных локаций
+# Лес: таинственный, опасный, живописный
+# Город: шумный, многолюдный, коррумпированный
+# Замок: величественный, старинный, призрачный
+# Подземелье: темное, сырое, полное ловушек`;
+                        break;
+
+                    case 'routes':
+                        contentElement = this.routesContent;
+                        defaultContent = `# === БАЗОВЫЕ МАРШРУТЫ ===
+# Линейные цепочки (удалите # для активации)
+# Порт → Корабль → Остров → Джунгли → Храм Древних
+# Таверна → Тёмный переулок → Подполье → Логово Вора
+# Академия Магии → Запретная Библиотека → Тайный ПортаЛ → Измерение Демонов
+
+# === ВЕТВЛЯЩИЕСЯ ПУТИ ===
+# Маршруты с выбором направления
+# Деревня ⤴ [Лес → Руины] | [Горы → Пещеры] | [Река → Плот → Остров]
+# Перекрёсток ⤴ [Город Тherion] | [Заброшенная Крепость] | [Магическая Башня]
+
+# === ЦИКЛИЧЕСКИЕ МАРШРУТЫ ===
+# Замок ⇄ Тайные ходы ⇄ Катакомбы ⇄ Заброшенный храм
+# Космическая станция ⇄ Транспортный челнок ⇄ Астероидная база
+
+# === ОПАСНЫЕ ЗОНЫ ===
+# Локации с повышенной вероятностью столкновений!
+# Тёмный лес 💀 [Вероятность боя: 70%]
+# Криминальный район 💀 [Вероятность стычки: 80%]
+# Территория мутантов 💀 [Вероятность нападения: 90%]
+
+# === ВАШИ УНИКАЛЬНЫЕ ЦЕПОЧКИ ===
+# Создайте свои маршруты (удалите # чтобы активировать)
+# Деревня рыбаков → Лодка → Озеро → Затонувший город → Портал в Атлантиду
+# Кибергород → Метавселенная → Нейросеть → Искусственный интеллект → Сознание машины`;
+                        break;
+
+                    case 'artifacts':
+                        contentElement = this.artifactsContent;
+                        defaultContent = `# === ТИПЫ АРТЕФАКТОВ ===
+# Активируйте типы артефактов удалением #
+# Боевые (увеличивают урон, защиту)
+# Магические (усиливают заклинания)
+# Утилитарные (открывают пути)
+# Сюжетные (для основного квеста)
+# Легендарные (уникальные, мощные)
+# Потребляемые (одноразовые)
+
+# === ПРИМЕРЫ АРТЕФАКТОВ ===
+# Конкретные артефакты для игры
+# "Огненный амулет: +10 к огненной магии"
+# "Карта сокровищ: открывает тайники"
+# "Ключ от древнего храма: доступ к секретной зоне"
+# "Эликсир здоровья: восстанавливает 50 HP"
+# "Плащ-невидимка: скрывает от врагов"
+# "Посох магии: +20 к силе заклинаний"
+
+# === СИСТЕМА ПОЛУЧЕНИЯ ===
+# Как игрок будет получать артефакты
+# Находится в сундуках
+# Покупается у торговцев
+# Награда за квесты
+# Создается через крафтинг
+# Падает с боссов
+
+# === ОГРАНИЧЕНИЯ ===
+# Баланс игровой механики
+# Максимум 6 артефактов в инвентаре
+# Некоторые требуют определенного уровня
+# Редкие артефакты уникальны`;
+                        break;
+
+                    case 'mana':
+                        contentElement = this.manaContent;
+                        defaultContent = `# === ТИПЫ МАНЫ ===
+# Выберите типы маны для вашей игры
+# Стихийная (огонь, вода, воздух, земля)
+# Темная (некромантия, проклятия)
+# Светлая (исцеление, защита)
+# Хаотическая (телепортация, иллюзии)
+# Природная (растительность, животные)
+# Психическая (разум, эмоции)
+
+# === ХАРАКТЕРИСТИКИ МАНЫ ===
+# Базовые настройки системы
+# Базовый запас: 100 единиц
+# Восстановление: 10 ед./ход (естественное)
+# Максимум: 200 единиц
+# Стоимость заклинаний: 5-50 единиц
+
+# === ПРАВИЛА СИСТЕМЫ ===
+# Основные механизмы работы маны
+# Восстановление: естественное + медитация
+# Влияние: ограничивает заклинания, усиливает артефакты
+# Комбинации: смешение типов маны дает новые эффекты
+# Ограничения: некоторые заклинания требуют определенного уровня
+
+# === СПОСОБЫ ВОССТАНОВЛЕНИЯ ===
+# Как игрок может восстанавливать ману
+# Естественная регенерация (медленная)
+# Медитация (быстрая, требует времени)
+# Зелья маны (мгновенное, ограничено)
+# Специальные локации (источники маны)`;
+                        break;
+
+                    case 'heroes':
+                        contentElement = this.heroesContent;
+                        defaultContent = `# === ГЛАВНЫЙ ГЕРОЙ ===
+# Активируйте характеристики главного героя
+# Имя: Аэлиан - молодой маг с даром предвидения
+# Происхождение: сирота, воспитанный в магической академии
+# Характер: любознательный, сострадательный, но нерешительный
+# Мотивация: найти своих настоящих родителей и раскрыть тайну происхождения
+# Слабости: слишком доверчив, боится принимать важные решения
+# Особенности: может видеть фрагменты будущего во снах
+
+# === СПОСОБНОСТИ ГЕРОЯ ===
+# Базовые навыки и умения
+# Магия стихий (огонь, вода, воздух, земля)
+# Исцеление и защита
+# Предвидение (ограничене, требует много маны)
+# Переговоры и убеждение
+# Скрытность и незаметность
+
+# === РАЗВИТИЕ ГЕРОЯ ===
+# Как герой будет развиваться в игре
+# Дерево навыков с ветвлениями
+# Моральный выбор влияет на способности
+# Отношения с NPC открывают новые умения
+# Артефакты усиливают определенные навыки
+
+# === ТИПЫ ВРАГОВ ===
+# Активируйте типы врагов для игры
+# Боссы (уникальные, с особыми способностями)
+# Обычные (стандартные противники)
+# Нейтральные (могут стать союзниками)
+# Рейдовые (очень сильные, для группы)
+# Мини-боссы (сильнее обычных, слабее боссов)
+
+# === ПРИМЕРЫ ВРАГОВ ===
+# Конкретные противники и их особенности
+# "Темный волшебник Малкадор: слаб к светлой мане, ищет артефакт вечной жизни"
+# "Гоблины-разбойники: слабы к огненной магии, нападают на торговые караваны"
+# "Призраки забытой цивилизации: иммунны к физическим атакам, охраняют древние руины"
+# "Дракон Пламени: силен против всех типов, кроме льда, защищает свое гнездо"
+# "Некромант Заратул: призывает мертвецов, стремится создать армию нежити"
+# "Вампир-аристократ: восстанавливает здоровье от укусов, ищет древний артефакт"
+
+# === СИСТЕМА СЛОЖНОСТИ ===
+# Настройки баланса и прогрессии
+# Враги становятся сильнее по мере прогресса
+# Уникальные способности у боссов
+# Слабые места у каждого типа врагов
+# Возможность избежать боя через диалог
+
+# === НАГРАДЫ ЗА ПОБЕДУ ===
+# Что получает игрок за победу
+# Опыт и золото
+# Редкие артефакты с боссов
+# Ключевые предметы для сюжета
+# Доступ к новым локациям
+# Улучшение репутации с фракциями
+
+# === ОСОБЫЕ МЕХАНИКИ ===
+# Дополнительные системы взаимодействия
+# Система репутации с различными фракциями
+# Возможность вербовать некоторых врагов
+# Моральный выбор в диалогах с противниками
+# Альтернативные пути прохождения через убеждение`;
+                        break;
+
+                    case 'economy':
+                        contentElement = this.economyContent;
+                        defaultContent = `# === ЭКОНОМИКА ===
+# Денежная система и торговля
+# Основная валюта: золотые монеты
+# Альтернативные валюты: магические кристаллы, репутация
+# Источники дохода: квесты, торговля, победа над врагами
+# Расходы: снаряжение, зелья, обучение, взятки
+
+# === ЦЕНЫ И ТОРГОВЛЯ ===
+# Баланс цен в игре
+# Зелье здоровья: 50 золотых
+# Зелье маны: 75 золотых
+# Обычное оружие: 100-300 золотых
+# Магическое оружие: 500-2000 золотых
+# Редкие артефакты: 5000+ золотых
+# Стоимость обучения: 200 золотых за уровень
+
+# === СИСТЕМА НАГРАД ===
+# Награды за выполнение заданий
+# Малый квест: 100-300 золотых
+# Средний квест: 400-800 золотых
+# Большой квест: 1000-2500 золотых
+# Эпический квест: 5000+ золотых
+# Бонусы за обнаружение секретов: +50% к награде
+
+# === БОЕВАЯ СИСТЕМА ===
+# Механики боя и характеристики
+# Базовый урон: 10-20 единиц
+# Критический удар: x2 урона (шанс 15%)
+# Защита: снижает получаемый урон на 1-10 единиц
+# Инициатива: определяет порядок ходов
+# Уклонение: шанс 20% избежать атаки
+
+# === ВАРИАНТЫ РАЗРЕШЕНИЯ КОНФЛИКТОВ ===
+[1] [БОЙ] Атаковать напрямую (риск травм)
+[2] [ПЕРЕГОВОРЫ] Убедить/обмануть (требует харизмы)
+[3] [СКРЫТНОСТЬ] Уйти незамеченным (требует ловкости)
+[4] [МАГИЯ] Использовать заклинания (стоимость маны)
+[5] [ПОДКУП] Предложить деньги/артефакты
+[6] [ЗАПУГИВАНИЕ] Использовать репутацию
+
+# === МЕХАНИКА АКТИВАЦИИ УГРОЗ ===
+# Вероятность столкновения = Уровень угрозы + Модификаторы
+# Модификаторы:
+# - Неудачная скрытность: +20%
+# - Убийство противников: +10% к бдительности
+# - Успешный подкуп: -30% на 2 хода
+# - Обнаружение шпиона: +40% (погоня)
+
+# === ДИНАМИЧЕСКАЯ ЭСКАЛАЦИЯ ===
+- При провале скрытности: +20% угрозы во всех связанных локациях
+- Убийство противников: +10% к бдительности врагов
+- Успешный подкуп: -30% угрозы в текущей зоне на 2 хода
+- Обнаружение шпиона: Триггер погони через 3 локации
+
+# === БОЕВАЯ МЕХАНИКА ===
+# Система боя и характеристики
+# Типы атак: физическая, магическая, дальняя, ближняя
+# Сопротивления: броня (физика), резисты (магия)
+# Эффекты статусов: оглушение, отравление, горение, заморозка
+# Критические попадания: шанс 15%, урон x2
+# Уклонение: базовый шанс 20%, зависит от ловкости
+
+# === ТАКТИЧЕСКИЕ ВОЗМОЖНОСТИ ===
+# Дополнительные опции в бою
+# Защита: уменьшает получаемый урон на 50% на 1 ход
+# Концентрация: увеличивает шанс крита на 25% на следующий ход
+# Бегство: попытка избежать боя (шанс 60%)
+# Использование предметов: зелья, свитки, одноразовые артефакты
+
+# === СИСТЕМА УРОВНЕЙ И ПРОГРЕССИИ ===
+# Развитие персонажа в бою
+# Опыт за победу: 50-200 XP в зависимости от противника
+# Уровни: максимум 50, с повышением характеристик
+# Характеристики: сила, ловкость, интеллект, выносливость
+# Навыки: пассивные и активные способности`;
+                        break;
+
+                    default:
+                        return;
+                }
+
+                if (contentElement && activeItems.length > 0) {
+                    // Сначала устанавливаем стандартное содержимое
+                    contentElement.value = defaultContent;
+
+                    // Затем активируем элементы из импортированного массива
+                    const lines = defaultContent.split('\n');
+                    const restoredLines = lines.map(line => {
+                        const trimmedLine = line.trim();
+
+                        // Пропускаем заголовки и комментарии
+                        if (!trimmedLine ||
+                            trimmedLine.startsWith('# ===') ||
+                            trimmedLine.startsWith('//') ||
+                            trimmedLine.includes('Инструкция:') ||
+                            trimmedLine.includes('💡')) {
+                            return line;
+                        }
+
+                        // Если строка начинается с #, проверяем содержимое после #
+                        if (trimmedLine.startsWith('#')) {
+                            const cleanLine = trimmedLine.replace(/^#\s*/, '').trim();
+                            // Проверяем, есть ли эта строка в активных элементах
+                            if (activeItems.some(item => this.normalizeText(item) === this.normalizeText(cleanLine))) {
+                                return cleanLine; // Активируем строку
+                            }
+                        }
+
+                        return line;
+                    });
+
+                    // Добавляем пользовательские элементы, которых нет в стандартном списке
+                    const customItems = activeItems.filter(item =>
+                        !lines.some(line => {
+                            const cleanLine = line.replace(/^#\s*/, '').trim();
+                            return this.normalizeText(cleanLine) === this.normalizeText(item);
+                        })
+                    );
+
+                    if (customItems.length > 0) {
+                        // Находим место для вставки пользовательских элементов
+                        let insertIndex = restoredLines.findIndex(line =>
+                            line.includes('=== ВАШИ СОБСТВЕННЫЕ') ||
+                            line.includes('=== ВАШИ УНИКАЛЬНЫЕ')
+                        );
+
+                        if (insertIndex === -1) {
+                            // Если не нашли специальный раздел, добавляем в конец
+                            insertIndex = restoredLines.length;
+                        } else {
+                            // Находим конец раздела
+                            while (insertIndex < restoredLines.length &&
+                                   !restoredLines[insertIndex].includes('===') &&
+                                   !restoredLines[insertIndex].includes('---')) {
+                                insertIndex++;
+                            }
+                        }
+
+                        // Добавляем пользовательские элементы
+                        const customSection = ['', '# === ИМПОРТИРОВАННЫЕ ЭЛЕМЕНТЫ ===', ...customItems.map(item => item)];
+                        restoredLines.splice(insertIndex, 0, ...customSection);
+                    }
+
+                    contentElement.value = restoredLines.join('\n');
+                }
+            }
+
+            // Вспомогательный метод для нормализации текста при сравнении
+            normalizeText(text) {
+                return text.toLowerCase().replace(/\s+/g, ' ').trim();
+            }
+
+            async copyToClipboard() {
+                const content = this.outputContent.textContent;
+                if (!content || content.includes('// Здесь будет отображен результат работы конструктора...')) {
+                    this.showStatus('Нет данных для копирования', true);
+                    return;
+                }
+
+                try {
+                    await navigator.clipboard.writeText(content);
+                    this.showStatus('Текст скопирован в буфер обмена!');
+                } catch (err) {
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = content;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        this.showStatus('Текст скопирован в буфер обмена!');
+                    } catch (fallbackErr) {
+                        this.showStatus('Ошибка при копировании', true);
+                    }
+                }
+            }
+
+            clearOutput() {
+                this.outputContent.textContent = '// Здесь будет отображен результат работы конструктора...';
+                this.saveToStorage();
+                this.showStatus('Область вывода очищена');
+            }
+
+            resetAll() {
+                if (confirm('Вы уверены, что хотите сбросить все настройки? Это действие нельзя отменить.')) {
+                    // Восстанавливаем исходное содержимое досок
+                    this.ideaContent.value = '';
+
+                    this.genresContent.value = `# === ОСНОВНЫЕ ЖАНРЫ ===
+# Чтобы активировать жанр - удалите решетку # в начале строки
+# Фэнтези
+# Научная фантастика
+# Киберпанк
+# Хоррор
+# Детектив
+# Романтика
+# Приключения
+# Мистика
+
+# === ГИБРИДЫ ===
+# Активируйте гибриды, удалив решетку #
+# "Фэнтези + Политическая интрига"
+# "Киберпанк + Нуар"
+# "Хоррор + Психологический триллер"
+# "Научная фантастика + Детектив"
+# "Фэнтези + Стимпанк"
+# "Постапокалипсис + Выживание"
+
+# === НАСТРОЙКИ АТМОСФЕРЫ ===
+# Эпический размах
+# Камерная история
+# Мрачная атмосфера
+# Юмористический тон
+# Поэтический стиль
+# Реалистичный подход
+
+# === ВАШИ СОБСТВЕННЫЕ ЖАНРЫ ===
+# Напишите здесь свои уникальные комбинации (уберите # чтобы активировать)
+# "Магический реализм + Городское фэнтези"
+# "Исторический роман + Фантастика"`;
+
+                    this.locationsContent.value = `# === ТИПЫ ЛОКАЦИЙ ===
+# Формат: Название [Угроза: X% | Противник | Слабость]
+# Удалите решетку # чтобы выбрать локацию
+#Лес [Угроза: 15% | Серый волк | Слабость: Огонь]
+#Город [Угроза: 25% | Уличные бандиты | Слабость: Запугивание]
+#Подземелье [Угроза: 60% | Скелет-воин | Слабость: Святая магия]
+#Замок [Угроза: 40% | Королевская стража | Слабость: Подкуп]
+#Деревня [Угроза: 10% | Деревенский дурак | Слабость: Обман]
+#Горы [Угроза: 50% | Горный тролль | Слабость: Ловкость]
+#Побережье [Угроза: 20% | Пираты | Слабость: Переговоры]
+#Пустыня [Угроза: 35% | Песчаный червь | Слабость: Вода]
+#Болото [Угроза: 45% | Болотный дух | Слабость: Огонь]
+#Руины [Угроза: 55% | Древний голем | Слабость: Магия]
+
+# === ОСОБЫЕ ЛОКАЦИИ ===
+# Активируйте особые локации
+#Магическая башня [Угроза: 70% | Архимаг | Слабость: Контрмагия]
+#Храм древних [Угроза: 80% | Жрец культа | Слабость: Разум]
+#Подземный город [Угроза: 65% | Тёмные эльфы | Слабость: Свет]
+#Летающий остров [Угроза: 75% | Небесные стражи | Слабость: Земля]
+#Порталы между мирами [Угроза: 90% | Демон-хранитель | Слабость: Запечатывание]
+
+# === СВЯЗИ МЕЖДУ ЛОКАЦИЯМИ ===
+# Эти связи будут учтены в генерации игры
+# Лес → Деревня → Город → Замок
+# Подземелье ← Лес
+# Горы → Пещеры → Древний храм
+# Порт → Корабль → Остров
+
+# === АТМОСФЕРА ЛОКАЦИЙ ===
+# Описания атмосферы для активированных локаций
+# Лес: таинственный, опасный, живописный
+# Город: шумный, многолюдный, коррумпированный
+# Замок: величественный, старинный, призрачный
+# Подземелье: темное, сырое, полное ловушек`;
+
+                    this.routesContent.value = `# === БАЗОВЫЕ МАРШРУТЫ ===
+# Линейные цепочки (удалите # для активации)
+# Порт → Корабль → Остров → Джунгли → Храм Древних
+# Таверна → Тёмный переулок → Подполье → Логово Вора
+# Академия Магии → Запретная Библиотека → Тайный ПортаЛ → Измерение Демонов
+
+# === ВЕТВЛЯЩИЕСЯ ПУТИ ===
+# Маршруты с выбором направления
+# Деревня ⤴ [Лес → Руины] | [Горы → Пещеры] | [Река → Плот → Остров]
+# Перекрёсток ⤴ [Город Тherion] | [Заброшенная Крепость] | [Магическая Башня]
+
+# === ЦИКЛИЧЕСКИЕ МАРШРУТЫ ===
+# Замок ⇄ Тайные ходы ⇄ Катакомбы ⇄ Заброшенный храм
+# Космическая станция ⇄ Транспортный челнок ⇄ Астероидная база
+
+# === ОПАСНЫЕ ЗОНЫ ===
+# Локации с повышенной вероятностью столкновений!
+# Тёмный лес 💀 [Вероятность боя: 70%]
+# Криминальный район 💀 [Вероятность стычки: 80%]
+# Территория мутантов 💀 [Вероятность нападения: 90%]
+
+# === ВАШИ УНИКАЛЬНЫЕ ЦЕПОЧКИ ===
+# Создайте свои маршруты (удалите # чтобы активировать)
+# Деревня рыбаков → Лодка → Озеро → Затонувший город → Портал в Атлантиду
+# Кибергород → Метавселенная → Нейросеть → Искусственный интеллект → Сознание машины`;
+
+                    this.artifactsContent.value = `# === ТИПЫ АРТЕФАКТОВ ===
+# Активируйте типы артефактов удалением #
+# Боевые (увеличивают урон, защиту)
+# Магические (усиливают заклинания)
+# Утилитарные (открывают пути)
+# Сюжетные (для основного квеста)
+# Легендарные (уникальные, мощные)
+# Потребляемые (одноразовые)
+
+# === ПРИМЕРЫ АРТЕФАКТОВ ===
+# Конкретные артефакты для игры
+# "Огненный амулет: +10 к огненной магии"
+# "Карта сокровищ: открывает тайники"
+# "Ключ от древнего храма: доступ к секретной зоне"
+# "Эликсир здоровья: восстанавливает 50 HP"
+# "Плащ-невидимка: скрывает от врагов"
+# "Посох магии: +20 к силе заклинаний"
+
+# === СИСТЕМА ПОЛУЧЕНИЯ ===
+# Как игрок будет получать артефакты
+# Находится в сундуках
+# Покупается у торговцев
+# Награда за квесты
+# Создается через крафтинг
+# Падает с боссов
+
+# === ОГРАНИЧЕНИЯ ===
+# Баланс игровой механики
+# Максимум 6 артефактов в инвентаре
+# Некоторые требуют определенного уровня
+# Редкие артефакты уникальны`;
+
+                    this.manaContent.value = `# === ТИПЫ МАНЫ ===
+# Выберите типы маны для вашей игры
+# Стихийная (огонь, вода, воздух, земля)
+# Темная (некромантия, проклятия)
+# Светлая (исцеление, защита)
+# Хаотическая (телепортация, иллюзии)
+# Природная (растительность, животные)
+# Психическая (разум, эмоции)
+
+# === ХАРАКТЕРИСТИКИ МАНЫ ===
+# Базовые настройки системы
+# Базовый запас: 100 единиц
+# Восстановление: 10 ед./ход (естественное)
+# Максимум: 200 единиц
+# Стоимость заклинаний: 5-50 единиц
+
+# === ПРАВИЛА СИСТЕМЫ ===
+# Основные механизмы работы маны
+# Восстановление: естественное + медитация
+# Влияние: ограничивает заклинания, усиливает артефакты
+# Комбинации: смешение типов маны дает новые эффекты
+# Ограничения: некоторые заклинания требуют определенного уровня
+
+# === СПОСОБЫ ВОССТАНОВЛЕНИЯ ===
+# Как игрок может восстанавливать ману
+# Естественная регенерация (медленная)
+# Медитация (быстрая, требует времени)
+# Зелья маны (мгновенное, ограничено)
+# Специальные локации (источники маны)`;
+
+                    this.heroesContent.value = `# === ГЛАВНЫЙ ГЕРОЙ ===
+# Активируйте характеристики главного героя
+# Имя: Аэлиан - молодой маг с даром предвидения
+# Происхождение: сирота, воспитанный в магической академии
+# Характер: любознательный, сострадательный, но нерешительный
+# Мотивация: найти своих настоящих родителей и раскрыть тайну происхождения
+# Слабости: слишком доверчив, боится принимать важные решения
+# Особенности: может видеть фрагменты будущего во снах
+
+# === СПОСОБНОСТИ ГЕРОЯ ===
+# Базовые навыки и умения
+# Магия стихий (огонь, вода, воздух, земля)
+# Исцеление и защита
+# Предвидение (ограниченное, требует много маны)
+# Переговоры и убеждение
+# Скрытность и незаметность
+
+# === РАЗВИТИЕ ГЕРОЯ ===
+# Как герой будет развиваться в игре
+# Дерево навыков с ветвлениями
+# Моральный выбор влияет на способности
+# Отношения с NPC открывают новые умения
+# Артефакты усиливают определенные навыки
+
+# === ТИПЫ ВРАГОВ ===
+# Активируйте типы врагов для игры
+# Боссы (уникальные, с особыми способностями)
+# Обычные (стандартные противники)
+# Нейтральные (могут стать союзниками)
+# Рейдовые (очень сильные, для группы)
+# Мини-боссы (сильнее обычных, слабее боссов)
+
+# === ПРИМЕРЫ ВРАГОВ ===
+# Конкретные противники и их особенности
+# "Темный волшебник Малкадор: слаб к светлой мане, ищет артефакт вечной жизни"
+# "Гоблины-разбойники: слабы к огненной магии, нападают на торговые караваны"
+# "Призраки забытой цивилизации: иммунны к физическим атакам, охраняют древние руины"
+# "Дракон Пламени: силен против всех типов, кроме льда, защищает свое гнездо"
+# "Некромант Заратул: призывает мертвецов, стремится создать армию нежити"
+# "Вампир-аристократ: восстанавливает здоровье от укусов, ищет древний артефакт"
+
+# === СИСТЕМА СЛОЖНОСТИ ===
+# Настройки баланса и прогрессии
+# Враги становятся сильнее по мере прогресса
+# Уникальные способности у боссов
+# Слабые места у каждого типа врагов
+# Возможность избежать боя через диалог
+
+# === НАГРАДЫ ЗА ПОБЕДУ ===
+# Что получает игрок за победу
+# Опыт и золото
+# Редкие артефакты с боссов
+# Ключевые предметы для сюжета
+# Доступ к новым локациям
+# Улучшение репутации с фракциями
+
+# === ОСОБЫЕ МЕХАНИКИ ===
+# Дополнительные системы взаимодействия
+# Система репутации с различными фракциями
+# Возможность вербовать некоторых врагов
+# Моральный выбор в диалогах с противниками
+# Альтернативные пути прохождения через убеждение`;
+
+                    this.economyContent.value = `# === ЭКОНОМИКА ===
+# Денежная система и торговля
+# Основная валюта: золотые монеты
+# Альтернативные валюты: магические кристаллы, репутация
+# Источники дохода: квесты, торговля, победа над врагами
+# Расходы: снаряжение, зелья, обучение, взятки
+
+# === ЦЕНЫ И ТОРГОВЛЯ ===
+# Баланс цен в игре
+# Зелье здоровья: 50 золотых
+# Зелье маны: 75 золотых
+# Обычное оружие: 100-300 золотых
+# Магическое оружие: 500-2000 золотых
+# Редкие артефакты: 5000+ золотых
+# Стоимость обучения: 200 золотых за уровень
+
+# === СИСТЕМА НАГРАД ===
+# Награды за выполнение заданий
+# Малый квест: 100-300 золотых
+# Средний квест: 400-800 золотых
+# Большой квест: 1000-2500 золотых
+# Эпический квест: 5000+ золотых
+# Бонусы за обнаружение секретов: +50% к награде
+
+# === БОЕВАЯ СИСТЕМА ===
+# Механики боя и характеристики
+# Базовый урон: 10-20 единиц
+# Критический удар: x2 урона (шанс 15%)
+# Защита: снижает получаемый урон на 1-10 единиц
+# Инициатива: определяет порядок ходов
+# Уклонение: шанс 20% избежать атаки
+
+# === ВАРИАНТЫ РАЗРЕШЕНИЯ КОНФЛИКТОВ ===
+[1] [БОЙ] Атаковать напрямую (риск травм)
+[2] [ПЕРЕГОВОРЫ] Убедить/обмануть (требует харизмы)
+[3] [СКРЫТНОСТЬ] Уйти незамеченным (требует ловкости)
+[4] [МАГИЯ] Использовать заклинания (стоимость маны)
+[5] [ПОДКУП] Предложить деньги/артефакты
+[6] [ЗАПУГИВАНИЕ] Использовать репутацию
+
+# === МЕХАНИКА АКТИВАЦИИ УГРОЗ ===
+# Вероятность столкновения = Уровень угрозы + Модификаторы
+# Модификаторы:
+# - Неудачная скрытность: +20%
+# - Убийство противников: +10% к бдительности
+# - Успешный подкуп: -30% на 2 хода
+# - Обнаружение шпиона: +40% (погоня)
+
+# === ДИНАМИЧЕСКАЯ ЭСКАЛАЦИЯ ===
+- При провале скрытности: +20% угрозы во всех связанных локациях
+- Убийство противников: +10% к бдительности врагов
+- Успешный подкуп: -30% угрозы в текущей зоне на 2 хода
+- Обнаружение шпиона: Триггер погони через 3 локации
+
+# === БОЕВАЯ МЕХАНИКА ===
+# Система боя и характеристики
+# Типы атак: физическая, магическая, дальняя, ближняя
+# Сопротивления: броня (физика), резисты (магия)
+# Эффекты статусов: оглушение, отравление, горение, заморозка
+# Критические попадания: шанс 15%, урон x2
+# Уклонение: базовый шанс 20%, зависит от ловкости
+
+# === ТАКТИЧЕСКИЕ ВОЗМОЖНОСТИ ===
+# Дополнительные опции в бою
+# Защита: уменьшает получаемый урон на 50% на 1 ход
+# Концентрация: увеличивает шанс крита на 25% на следующий ход
+# Бегство: попытка избежать боя (шанс 60%)
+# Использование предметов: зелья, свитки, одноразовые артефакты
+
+# === СИСТЕМА УРОВНЕЙ И ПРОГРЕССИИ ===
+# Развитие персонажа в бою
+# Опыт за победу: 50-200 XP в зависимости от противника
+# Уровни: максимум 50, с повышением характеристик
+# Характеристики: сила, ловкость, интеллект, выносливость
+# Навыки: пассивные и активные способности`;
+
+                    this.outputContent.textContent = '// Здесь будет отображен результат работы конструктора...';
+                    this.interviewModeCheckbox.checked = true;
+                    this.showBoard('idea');
+                    this.saveToStorage();
+                    this.showStatus('Все настройки сброшены к исходным');
+                }
+            }
+
+            debouncedSave() {
+                if (this.saveTimeout) {
+                    clearTimeout(this.saveTimeout);
+                }
+                this.saveTimeout = setTimeout(() => {
+                    this.saveToStorage();
+                }, this.DEBOUNCE_DELAY);
+            }
+
+            toggleTheme() {
+                const isLightTheme = this.themeCheckbox.checked;
+                document.documentElement.setAttribute('data-theme', isLightTheme ? 'light' : 'dark');
+                this.saveToStorage();
+            }
+
+            applyTheme() {
+                const savedTheme = localStorage.getItem('questAlchemistTheme');
+                const isLightTheme = savedTheme === 'light';
+                this.themeCheckbox.checked = isLightTheme;
+                document.documentElement.setAttribute('data-theme', isLightTheme ? 'light' : 'dark');
+            }
+
+            saveToStorage() {
+                const data = {
+                    currentBoard: this.currentBoard,
+                    idea: this.ideaContent.value,
+                    genres: this.genresContent.value,
+                    locations: this.locationsContent.value,
+                    routes: this.routesContent.value,
+                    artifacts: this.artifactsContent.value,
+                    mana: this.manaContent.value,
+                    heroes: this.heroesContent.value,
+                    economy: this.economyContent.value,
+                    output: this.outputContent.textContent,
+                    interviewMode: this.interviewModeCheckbox.checked
+                };
+                localStorage.setItem('questAlchemist', JSON.stringify(data));
+                localStorage.setItem('questAlchemistTheme', this.themeCheckbox.checked ? 'light' : 'dark');
+            }
+
+            loadFromStorage() {
+                try {
+                    const saved = localStorage.getItem('questAlchemist');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.ideaContent.value = data.idea || '';
+                        this.genresContent.value = data.genres || this.genresContent.value;
+                        this.locationsContent.value = data.locations || this.locationsContent.value;
+                        this.routesContent.value = data.routes || this.routesContent.value;
+                        this.artifactsContent.value = data.artifacts || this.artifactsContent.value;
+                        this.manaContent.value = data.mana || this.manaContent.value;
+                        this.heroesContent.value = data.heroes || this.heroesContent.value;
+                        this.economyContent.value = data.economy || this.economyContent.value;
+                        this.outputContent.textContent = data.output || this.outputContent.textContent;
+                        this.interviewModeCheckbox.checked = data.interviewMode !== undefined ? data.interviewMode : true;
+                        this.currentBoard = data.currentBoard || 'idea';
+                    }
+                } catch (err) {
+                    console.error('Ошибка загрузки из хранилища:', err);
+                }
+            }
+
+            showStatus(message, isError = false) {
+                this.statusMessage.textContent = message;
+                this.statusMessage.className = 'status-message';
+                if (isError) this.statusMessage.classList.add('error');
+                this.statusMessage.classList.add('show');
+
+                setTimeout(() => {
+                    this.statusMessage.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', () => {
+            new QuestAlchemist();
+        });
+    </script>
+</body>
+</html>
